@@ -32,17 +32,33 @@ obj6=get_data_from_website('https://lesserevil.com/collections/organic-popcorn/p
 obj7=get_data_from_website('https://lesserevil.com/collections/organic-popcorn/products/oh-my-ghee-organic-popcorn')
 obj8=get_data_from_website('https://lesserevil.com/collections/organic-popcorn/products/white-chocolate-matcha')
 
+object_lst=[obj1,obj2,obj3,obj4,obj5,obj6,obj7,obj8]
+
+
 def setUpDatabase(db_name):
     path = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(path+'/'+db_name)
     cur = conn.cursor()
     return cur, conn
 
+def create_flavors_table(data,cur,conn):
+    cur.execute("CREATE TABLE IF NOT EXISTS flavors (id INTEGER PRIMARY KEY, popcorn_type TEXT)")
+    flavors_lst=[]
+    id=0
+    for object in object_lst:
+        popcorn_type=object[0]
+        flavors_lst.append(popcorn_type)
+        cur.execute("INSERT OR IGNORE INTO flavors (id, popcorn_type) VALUES (?,?)",(id, popcorn_type))
+        id+=1
+    conn.commit()
+
+
+
+    
 def setUpdc_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS dc_popcorn")
-    cur.execute("CREATE TABLE dc_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE dc_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -55,15 +71,14 @@ def setUpdc_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO dc_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO dc_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 
 def setUpav_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS av_popcorn")
-    cur.execute("CREATE TABLE av_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE av_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -76,15 +91,14 @@ def setUpav_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO av_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO av_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 
 def setUpch_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS ch_popcorn")
-    cur.execute("CREATE TABLE ch_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE ch_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -97,14 +111,13 @@ def setUpch_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO ch_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO ch_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 def setUphim_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS him_popcorn")
-    cur.execute("CREATE TABLE him_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE him_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -117,14 +130,13 @@ def setUphim_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO him_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO him_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 def setUpgold_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS gold_popcorn")
-    cur.execute("CREATE TABLE gold_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE gold_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -137,14 +149,13 @@ def setUpgold_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO gold_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO gold_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 def setUpsweet_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS sweet_popcorn")
-    cur.execute("CREATE TABLE sweet_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE sweet_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -157,14 +168,13 @@ def setUpsweet_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO sweet_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO sweet_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 def setUpoh_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS oh_popcorn")
-    cur.execute("CREATE TABLE oh_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE oh_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -177,15 +187,14 @@ def setUpoh_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO oh_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO oh_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 def setUpwh_popcornTable(data, cur, conn):
     cur.execute("DROP TABLE IF EXISTS pink_popcorn")
     cur.execute("DROP TABLE IF EXISTS wh_popcorn")
-    cur.execute("CREATE TABLE wh_popcorn (id INTEGER PRIMARY KEY, popcorn_type TEXT, nutrition_fact TEXT, nutrition_number TEXT)")
+    cur.execute("CREATE TABLE wh_popcorn (id INTEGER PRIMARY KEY, nutrition_fact TEXT, nutrition_number TEXT)")
     id=0
-    popcorn_type=data[0]
     for item in data[1:]:
         position=item.find('\n')
         if position != -1:
@@ -198,11 +207,13 @@ def setUpwh_popcornTable(data, cur, conn):
         nutrition_fact=item[0:digit_postion-2]
         id+=1
         nutrition_number=item[digit_postion-1:]
-        cur.execute("INSERT INTO wh_popcorn (id, popcorn_type , nutrition_fact , nutrition_number ) VALUES (?,?,?,?)",(id, popcorn_type , nutrition_fact , nutrition_number))
+        cur.execute("INSERT INTO wh_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
     conn.commit()
 
 
+
 cur, conn = setUpDatabase('popcorn_database')
+create_flavors_table(object_lst,cur, conn)
 setUpdc_popcornTable(obj1, cur, conn)
 setUpav_popcornTable(obj2, cur, conn)
 setUpch_popcornTable(obj3, cur, conn)
@@ -211,6 +222,7 @@ setUpgold_popcornTable(obj5, cur,conn)
 setUpsweet_popcornTable(obj6, cur, conn)
 setUpoh_popcornTable(obj7,cur, conn)
 setUpwh_popcornTable(obj8, cur, conn)
+
 
 def popcorn_join(fact, cur, conn):
     new_lst=[]
@@ -249,7 +261,6 @@ final_list=[]
 final_list.append(calc)
 
 
-
 with open('nutrition.txt', 'w') as f:
     for middle_list in final_list:
         for sub_list in middle_list:
@@ -273,9 +284,3 @@ for i, v in enumerate(averages):
     plt.text(i, v+1, str(v), 
             color = 'dodgerblue', fontweight = 'bold', ha='center')
 plt.show()
-
-
-
-
-
-
