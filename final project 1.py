@@ -7,6 +7,7 @@ import json
 import os
 import matplotlib
 import matplotlib.pyplot as plt
+import random
 
 #restaurantname, typefood, money symbol, reviews, location
 def get_data_from_website(url):
@@ -54,29 +55,54 @@ def setUpDatabase(db_name):
     cur = conn.cursor()
     return cur, conn
 
-def setup_restaurantstable(data, cur, conn):
+def create_table(cur,conn):
     cur.execute("DROP TABLE IF EXISTS restaurants_table")
     cur.execute("CREATE TABLE restaurants_table (id INTEGER PRIMARY KEY, name TEXT, type TEXT, money TEXT, review TEXT, location TEXT)")
+def setup_restaurantstable(data, cur, conn):
     id=0
     count=0
-    #while count <=25:
     final_list=[]
     for item in data:
         final_list.append(item)
-    for i in range(len(final_list)):
-        for item in range(len(final_list[i])):
-            name = final_list[0][item]
-            type=final_list[1][item]
-            money=final_list[2][item]
-            review=final_list[3][item]
-            location=final_list[4][item]
-            id+=1
-            cur.execute("INSERT OR IGNORE INTO restaurants_table (id, name, type, money, review, location) VALUES (?,?,?,?,?,?)",(id, name, type,money,review,location))
-        conn.commit()
+    cur.execute("SELECT name FROM restaurants_table")
+    names=cur.fetchall()
+    name_list=[]
+    for tup in names:
+        name_list.append(tup[0])
+    cur.execute("SELECT id FROM restaurants_table")
+    ids=cur.fetchall()
+    id_list=[]
+    for tup in ids:
+        id_list.append(int(tup[0]))
+    try:
+        id=max(id_list)
+    except:
+        id=0
+        create_table(cur,conn)
+    while count <25:
+        if id>=100:
+            break
+        for i in range(id,id+25):
+            if final_list[0][i] not in name_list:
+                name = final_list[0][i]
+                type=final_list[1][i]
+                money=final_list[2][i]
+                review=final_list[3][i]
+                location=final_list[4][i]
+                id+=1
+                count+=1
+                cur.execute("INSERT OR IGNORE INTO restaurants_table (id, name, type, money, review, location) VALUES (?,?,?,?,?,?)",(id, name, type,money,review,location))    
+        conn.commit() 
+
+# def calculate_average(column, cur, conn):
+#     cur.execute("SELECT review, money FROM restaurants_table orn ON dc_popcorn.nutrition_fact=av_popcorn.nutrition_fact JOIN ch_popcorn ON dc_popcorn.nutrition_fact=ch_popcorn.nutrition_fact JOIN gold_popcorn ON dc_popcorn.nutrition_fact=gold_popcorn.nutrition_fact JOIN sweet_popcorn ON dc_popcorn.nutrition_fact=sweet_popcorn.nutrition_fact JOIN oh_popcorn ON dc_popcorn.nutrition_fact=oh_popcorn.nutrition_fact JOIN wh_popcorn ON dc_popcorn.nutrition_fact=wh_popcorn.nutrition_fact WHERE dc_popcorn.nutrition_fact=?", (fact, ))
+#     columns=cur.fetchall()
+
     
 cur, conn = setUpDatabase('restaurants_database')
 web=get_data_from_website('https://www.opentable.com/lists/top-100-2021')
 setup_restaurantstable(web, cur, conn)
+
 
 
 
