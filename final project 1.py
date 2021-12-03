@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 from typing import ItemsView, List, Tuple
-=======
-from typing import List, Tuple
->>>>>>> 244a196d3d98efd186936fce1e368e7752105281
 from bs4 import BeautifulSoup
 import requests
 import unittest
@@ -49,7 +45,6 @@ def get_data_from_website(url):
         for sub_tag in tag:
             for tagg in sub_tag:
                 location_info.append(tagg)
-<<<<<<< HEAD
     return name_info, type_info,  money_info,  review_info,  location_info
 
 
@@ -76,9 +71,7 @@ def setup_restaurantstable(data, cur, conn):
             review=final_list[3][item]
             location=final_list[4][item]
             id+=1
-
             cur.execute("INSERT OR IGNORE INTO restaurants_table (id, name, type, money, review, location) VALUES (?,?,?,?,?,?)",(id, name, type,money,review,location))
-
         conn.commit()
     
 cur, conn = setUpDatabase('restaurants_database')
@@ -87,58 +80,4 @@ setup_restaurantstable(web, cur, conn)
 
 
 
-=======
-    print(name_info, type_info,  money_info,  review_info,  location_info)
-
-get_data_from_website('https://www.opentable.com/lists/top-100-2021')
-        #for sub_tag in tag:
-            #for sub_tags in sub_tag:
-                #if '\n' not in sub_tags:
-                    #collect_info.append(sub_tags)
-    #sub_list=[]
-   # count=0
-   # for i in range(len(collect_info)):
-     #   sub_list.append(collect_info[i])
-      #  count+=1
-       # if count % 3==0:
-       #     final_info_lst.append(sub_list)
-          #  sub_list=[]
-    #return final_info_lst
-
-#def setUpDatabase(db_name):
-    #path = os.path.dirname(os.path.abspath(__file__))
-    #conn = sqlite3.connect(path+'/'+db_name)
-   # cur = conn.cursor()
-    #return cur, conn
-
-#def setup_movietable(data, cur, conn):
-  #  cur.execute("CREATE TABLE movie_table (id INTEGER PRIMARY KEY, title TEXT, year TEXT)")
-  #  id=0
-   # count=0
-   ## while count <=25:
-     #   for item in data[1:]:
-      #  position=item.find('\n')
-      #  if position != -1:
-            #item=item[0:position]
-       # digit_postion=0
-       # for letter in item:
-       #     digit_postion+=1
-       ##     if letter.isdigit():
-       #         break
-       # nutrition_fact=item[0:digit_postion-2]
-       # id+=1
-       # nutrition_number=item[digit_postion-1:]
-       # if dtaa in table:
-       #     continue
-        #else:
-       # #    cur.execute("INSERT INTO dc_popcorn (id, nutrition_fact , nutrition_number ) VALUES (?,?,?)",(id, nutrition_fact , nutrition_number))
-         #   count+=1
-    #conn.commit()
-    
-
-        
-
-
-print(get_data_from_website('https://www.imdb.com/list/ls055592025/'))
->>>>>>> 244a196d3d98efd186936fce1e368e7752105281
       
