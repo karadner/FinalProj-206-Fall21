@@ -98,7 +98,7 @@ def setup_restaurantstable(data, cur, conn):
         id=max(id_list)
     except:
         id=0
-        create_table(cur, conn)
+        #create_table(cur, conn)
     while count <25:
         if id>=100:
             break
@@ -150,8 +150,8 @@ def calculate_average(cur, conn):
 
 
     fig=plt.figure(figsize=(16,8))
-    matplotlib.rc('xtick', labelsize=5) 
-    matplotlib.rc('ytick', labelsize=5)
+    matplotlib.rc('xtick', labelsize=6) 
+    matplotlib.rc('ytick', labelsize=7)
     averages_list=[]
     names_list=[]
     for type in average_dict:
@@ -167,6 +167,12 @@ def calculate_average(cur, conn):
 def main():
     cur, conn = setUpDatabase('restaurants_database')
     web=get_data_from_website('https://www.opentable.com/lists/top-100-2021')
+    try:
+        cur.execute("SELECT count(*) FROM restaurants_table")
+        counts=cur.fetchall()
+        counts[0]
+    except:
+        create_table(cur,conn)
     setup_restaurantstable(web, cur, conn)
     calculate_average(cur,conn)
 
