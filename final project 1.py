@@ -169,6 +169,7 @@ def main():
     web=get_data_from_website('https://www.opentable.com/lists/top-100-2021')
     setup_restaurantstable(web, cur, conn)
     calculate_average(cur,conn)
+
 main()
 
 
